@@ -95,9 +95,14 @@ if(ENABLE_SANITIZERS)
     )
 endif()
 
+add_library(${PROJECT_NAME}_lib src/my_module.cpp)
+target_include_directories(${PROJECT_NAME}_lib PUBLIC include)
+
 add_executable(${PROJECT_NAME} src/main.cpp)
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_lib)
 ```
+
+Keep everything except `main()` in the library so the test executable can link the same code.
 
 Key CMake practices:
 - Always set `CMAKE_CXX_EXTENSIONS OFF` to disable compiler-specific extensions
@@ -168,10 +173,10 @@ cmake --build build-release
 ```
 
 Available sanitizers (Clang/GCC):
-- **AddressSanitizer (ASan)**: `-fsanitize=address` — buffer overflows, use-after-free, memory leaks
+- **AddressSanitizer (ASan)**: `-fsanitize=address` — buffer overflows, use-after-free; memory leaks on Linux only (Apple Clang's ASan has no LeakSanitizer — use `leaks --atExit -- ./build/ProjectName` on macOS)
 - **UndefinedBehaviorSanitizer (UBSan)**: `-fsanitize=undefined` — signed overflow, null dereference, alignment
 - **ThreadSanitizer (TSan)**: `-fsanitize=thread` — data races (cannot combine with ASan)
-- **MemorySanitizer (MSan)**: `-fsanitize=memory` — uninitialized reads (Clang only, cannot combine with ASan)
+- **MemorySanitizer (MSan)**: `-fsanitize=memory` — uninitialized reads (Clang on Linux only, cannot combine with ASan)
 
 Always run the test suite under ASan+UBSan before considering code complete.
 
@@ -256,7 +261,7 @@ Add to CMakeLists.txt:
 
 ```cmake
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-    target_compile_options(${PROJECT_NAME} PRIVATE
+    target_compile_options(${PROJECT_NAME}_lib PRIVATE
         -Wall -Wextra -Wpedantic -Werror
         -Wconversion -Wsign-conversion
         -Wnon-virtual-dtor -Wold-style-cast
@@ -285,7 +290,7 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 add_executable(tests tests/test_main.cpp)
-target_link_libraries(tests PRIVATE GTest::gtest_main)
+target_link_libraries(tests PRIVATE ${PROJECT_NAME}_lib GTest::gtest_main)
 include(GoogleTest)
 gtest_discover_tests(tests)
 ```
@@ -305,10 +310,9 @@ TEST(MyModuleTest, EdgeCase) {
     EXPECT_THROW(my_function(-1, 0), std::invalid_argument);
 }
 
-TEST(MyModuleTest, NoLeaks) {
+TEST(MyModuleTest, CreatesResource) {
     auto ptr = create_resource();
     ASSERT_NE(ptr, nullptr);
-    // unique_ptr ensures cleanup — no manual delete needed
 }
 ```
 

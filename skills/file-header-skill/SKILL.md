@@ -18,7 +18,7 @@ Every header must include these fields in order:
 3. **Author** — `Gary Ash <gary.ash@icloud.com>`
 4. **Created** — set once when the file is first created, never changed
 5. **Modified** — updated on every meaningful edit (use the latest time if multiple edits occur on the same day)
-6. **Copyright** — `Copyright © YYYY By Gary Ash All rights reserved.` (if the current year differs from the year in the copyright line, append `-<current year>` to form a range)
+6. **Copyright** — `Copyright © YYYY By Gary Ash All rights reserved.` (if the current year differs from the last year in the copyright line, form a range ending in the current year: `2025` becomes `2025-2026`, and `2024-2025` becomes `2024-2026`)
 
 ## Timestamp Format
 
@@ -36,7 +36,7 @@ Examples: ` 7-Feb-2026  4:22pm`, `19-Mar-2026 11:05am`
 ### Multiline comment style (`/* */`)
 
 Use for languages that support multiline comment delimiters:
-- C, C++, Objective-C, Objective-C++, Java, JavaScript, TypeScript, Swift, Pascal, CSS
+- C, C++, Objective-C, Objective-C++, Java, JavaScript, TypeScript, Swift, CSS
 
 Template:
 ```
@@ -156,7 +156,6 @@ use v5.34;
 use strict;
 use warnings;
 use utf8;
-
 #*****************************************************************************************
 # filename.pl
 #
@@ -232,7 +231,7 @@ first line of the file:
 ### Updating a header on an existing file
 1. Read the file and locate the existing header
 2. Update the Modified timestamp to the current date/time
-3. If the current year differs from the copyright year, update to a year range (e.g., `2025-2026`)
+3. If the current year differs from the last copyright year, update to a year range ending in the current year (e.g., `2025` → `2025-2026`, `2024-2025` → `2024-2026`)
 4. Do not change the Created timestamp
 5. Update the file name if the file has been renamed
 6. Update the description if the file's purpose has changed

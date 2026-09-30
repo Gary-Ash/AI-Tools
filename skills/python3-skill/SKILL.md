@@ -60,7 +60,7 @@ When creating a new Python file, always add the header using `file-header-skill`
 - Launch from command line: `python3 -m pdb <script.py>`
 - Key commands:
   - `n` (next line), `s` (step into), `c` (continue), `r` (return from function)
-  - `b <line>` (set breakpoint), `cl <line>` (clear breakpoint)
+  - `b <line>` (set breakpoint), `cl <file>:<line>` or `cl <bpnumber>` (clear breakpoint; a bare number is a breakpoint number, not a line)
   - `p <expr>` (print expression), `pp <expr>` (pretty-print)
   - `l` (list source), `w` (where/backtrace), `u`/`d` (up/down frame)
   - `q` (quit)
@@ -73,7 +73,7 @@ When creating a new Python file, always add the header using `file-header-skill`
 - Format: `ruff format <script.py>`
 - Pass only the paths you changed — never run ruff or mypy across the whole tree
 - Configure in `pyproject.toml` under `[tool.ruff]`
-- Install with: `pip install ruff`
+- Install with: `brew install ruff`
 
 ### mypy (static type checker)
 - Checks type annotations for correctness
@@ -81,7 +81,7 @@ When creating a new Python file, always add the header using `file-header-skill`
 - Strict mode: `mypy --strict <script.py>`
 - Ignore specific lines: `# type: ignore[error-code]`
 - Configure in `pyproject.toml` under `[tool.mypy]`
-- Install with: `pip install mypy`
+- Install with: `brew install mypy`
 
 ### pytest (testing framework)
 - Python's most widely used test framework

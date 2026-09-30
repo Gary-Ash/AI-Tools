@@ -29,7 +29,7 @@ Use the `.applescript` extension for source and `.scpt` for compiled output.
 ## Code Quality
 
 - Use `tell ... end tell` blocks scoped as tightly as possible; do not nest unrelated work inside an application's `tell`.
-- Prefer explicit element paths over `whose` filters in hot loops, but use `whose` clauses for resilience when element indices shift.
+- Prefer one `whose` clause over looping through elements yourself: the filter runs in the target app as a single Apple event, and it stays correct when element indices shift.
 - Wrap fragile UI lookups in `try ... end try` so one missing element does not abort the whole script.
 - Use `delay` after UI actions that trigger animations or sheets; GUI automation races the UI otherwise.
 - Name variables descriptively; avoid one- or two-letter names — some short tokens collide with reserved words and fail to parse (e.g. a bare `rd` was rejected).
@@ -53,7 +53,8 @@ Without `my`, AppleScript tries to send `deleteAllConversations` to the Messages
 
 ## GUI Automation (System Events)
 
-- Requires Accessibility permission: System Settings > Privacy & Security > Accessibility, granted to the app that runs the script (Script Editor, Terminal, osascript, etc.). Every `System Events` call fails silently or errors without it.
+- Requires Accessibility permission: System Settings > Privacy & Security > Accessibility, granted to the app that runs the script (Script Editor, Terminal, osascript, etc.). UI scripting (`UI element`s, `click`, `keystroke`, `key code`) fails without it; non-UI calls such as `name of every process` do not need it.
+- Sending Apple events to another app also needs Automation permission (System Settings > Privacy & Security > Automation); without it the call fails with `-1743`.
 - UI-element hierarchies (`splitter group`, `scroll area`, `table`, toolbar buttons) and menu/button titles shift between macOS releases. Treat any hardcoded path as version-specific.
 - Use **Accessibility Inspector** (Xcode > Open Developer Tool > Accessibility Inspector) to confirm the live element tree and exact titles before relying on them.
 - Key codes for keystrokes: `key code 51` = Delete, `key code 53` = Escape, `key code 36` = Return, `key code 0 using {command down}` = Cmd+A.
@@ -62,7 +63,7 @@ Without `my`, AppleScript tries to send `deleteAllConversations` to the Messages
 
 - Use `log "message"` statements; output appears in Script Editor's log pane or on stderr under `osascript`.
 - Use `display dialog (someVariable as text)` for quick inspection of values mid-run.
-- Errors report a line number and a `(-NNNN)` OSA error code — `-2741` is a parser error, `-2740` a syntax-position error, `-1728` "can't get <element>" (missing UI element), `-25211` accessibility not authorized.
+- Errors report a line number and a `(-NNNN)` OSA error code — `-2740` is a general syntax error, `-2741` "Expected … but found …", `-1728` "can't get <element>" (missing UI element), `-1743` Apple events not authorized (Automation), `-25211` accessibility not authorized.
 - For GUI automation, isolate the failing `tell` block and run it alone to confirm the element path.
 
 ## Argument Handling

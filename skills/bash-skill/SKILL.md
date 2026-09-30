@@ -25,7 +25,7 @@ After creating a file, make it executable: `chmod +x <script.sh>`
 - Run scripts with: `bash <script.sh>` or `./<script.sh>`
 - Check syntax without executing: `bash -n <script.sh>`
 - Run with debug tracing: `bash -x <script.sh>`
-- Use `shellcheck <script.sh>` for static analysis (if available)
+- Use `shellcheck <script.sh>` for static analysis
 - Tests use `bats` (bats-core, required) in `test/*.bats`; run with `bats test/`
 
 ## Code Quality
@@ -59,6 +59,9 @@ while [[ $# -gt 0 ]]; do
         *) args+=("$1"); shift ;;
     esac
 done
+if [[ "${verbose}" == true ]]; then
+    printf 'Verbose mode on\n' >&2
+fi
 ```
 
 ### Cleanup on exit:
@@ -79,7 +82,7 @@ log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >&2; }
 ### Built-in Bash debugging
 - Use `set -x` to trace execution (or `bash -x script.sh`)
 - Use `PS4='+(${BASH_SOURCE}:${LINENO}): '` for detailed trace output
-- Use `trap 'printf "Error on line %s\n" "$LINENO" >&2' ERR` for error location
+- Use `set -E` with `trap 'printf "Error on line %s\n" "$LINENO" >&2' ERR` for error location; without `set -E`, functions don't inherit the ERR trap
 - Check for common issues: unquoted variables, missing error handling, word splitting
 
 ### ShellCheck (static analysis)
@@ -94,7 +97,7 @@ log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >&2; }
 - Launch with: `bashdb <script.sh>`
 - Key commands:
   - `n` (next), `s` (step into), `c` (continue)
-  - `b <line>` (set breakpoint), `d <line>` (delete breakpoint)
+  - `b <line>` (set breakpoint), `clear <line>` or `d <n>` (delete breakpoint by line or by number)
   - `p <expr>` (print expression), `x <expr>` (examine)
   - `l` (list source), `w` (where/backtrace)
   - `q` (quit)

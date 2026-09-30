@@ -48,8 +48,8 @@ Applies to every project unless a project-level CLAUDE.md overrides it.
 - Python: **pytest**. Tests live in `tests/`. Leave existing unittest suites as they
   are — pytest runs them.
   - Run: `python3 -m pytest -v`
-  - Lint: `ruff check`. Type check: `mypy`.
-  - Format: `ruff format`.
+  - Lint: `ruff check <files>`. Type check: `mypy <files>`.
+  - Format: `ruff format <files>`.
 - C++: **GoogleTest**, pulled in via CMake `FetchContent`. Tests registered with
   `gtest_discover_tests()` so CTest drives them.
 
@@ -62,10 +62,10 @@ Applies to every project unless a project-level CLAUDE.md overrides it.
     if present (`-c uncrustify.cfg`).
 - Perl: **Test::More** (core). Tests live in `t/*.t`.
   - Run: `prove -lr t/`
-  - Format: `perltidy -b -bext='/'`. Honor the project's `.perltidyrc` if present.
+  - Format: `perltidy -b -bext='/' <files>`. Honor the project's `.perltidyrc` if present.
 - Bash: **bats-core**. Tests live in `test/*.bats`.
   - Run: `bats test/`
-  - Lint: `shellcheck`.
+  - Lint: `shellcheck <files>`.
 - AppleScript: no test framework.
   - Check: `osacompile -o /tmp/out.scpt <file>` catches syntax errors only; run the
     script with `osascript` to confirm it works.
