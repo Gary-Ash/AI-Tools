@@ -23,9 +23,9 @@ When creating a new Python file, always add the header using `file-header-skill`
 - Run scripts with: `python3 <script.py>`
 - Run module: `python3 -m <module_name>`
 - Check syntax: `python3 -m py_compile <script.py>`
-- Run tests with: `python3 -m pytest -v` (pytest also runs existing unittest suites)
-- Type checking: `mypy <script.py>` (if available)
-- Linting: `ruff check <script.py>` or `flake8 <script.py>` (if available)
+- Tests live in `tests/`. Run them with: `python3 -m pytest -v` (pytest also runs existing unittest suites)
+- Type checking: `mypy <script.py>`
+- Linting: `ruff check <script.py>`
 
 ## Code Quality
 
@@ -46,7 +46,7 @@ When creating a new Python file, always add the header using `file-header-skill`
 - For packages, ensure `__init__.py` exists
 - Use `pyproject.toml` for project configuration when applicable
 - Virtual environments: `python3 -m venv .venv`
-- Install dependencies: `pip install -r requirements.txt`
+- Runtime code uses the standard library only. Ask before adding a third-party dependency or running `pip install` for one
 
 ## Debugging
 
@@ -68,15 +68,16 @@ When creating a new Python file, always add the header using `file-header-skill`
 
 ### Ruff (linter and formatter)
 - Fast Python linter and formatter written in Rust
-- Lint: `ruff check <script.py>` or `ruff check .`
+- Lint: `ruff check <script.py>`
 - Auto-fix: `ruff check --fix <script.py>`
 - Format: `ruff format <script.py>`
+- Pass only the paths you changed — never run ruff or mypy across the whole tree
 - Configure in `pyproject.toml` under `[tool.ruff]`
 - Install with: `pip install ruff`
 
 ### mypy (static type checker)
 - Checks type annotations for correctness
-- Run with: `mypy <script.py>` or `mypy .`
+- Run with: `mypy <script.py>`
 - Strict mode: `mypy --strict <script.py>`
 - Ignore specific lines: `# type: ignore[error-code]`
 - Configure in `pyproject.toml` under `[tool.mypy]`
@@ -85,8 +86,8 @@ When creating a new Python file, always add the header using `file-header-skill`
 ### pytest (testing framework)
 - Python's most widely used test framework
 - Run tests with: `python3 -m pytest -v`
-- Run a single file: `python3 -m pytest -v test_specific.py`
-- Run a single test: `python3 -m pytest -v test_file.py::test_name`
+- Run a single file: `python3 -m pytest -v tests/test_specific.py`
+- Run a single test: `python3 -m pytest -v tests/test_file.py::test_name`
 - Test file structure:
   ```python
   import pytest

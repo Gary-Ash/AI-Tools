@@ -12,7 +12,8 @@ Applies to every project unless a project-level CLAUDE.md overrides it.
 
 ## Development Approach
 
-- Test-Driven Development, Kent Beck style, for all production code. Use `tdd-skill`.
+- Test-Driven Development, Kent Beck style, for all production code in a language with
+  a test framework listed under Build, Test, Lint. Use `tdd-skill`.
 - Small, focused commits. One concern each.
 
 ## Languages
@@ -23,13 +24,14 @@ Applies to every project unless a project-level CLAUDE.md overrides it.
   runtime code — ask before adding a third-party dependency. The dev tools below
   (pytest, ruff, mypy) are allowed. Use `python3-skill`.
 - **C++** — performance-critical work only.
-  - C++20. Memory-safe idioms: smart pointers, RAII, standard containers. No raw
+  - C++23. Memory-safe idioms: smart pointers, RAII, standard containers. No raw
     `new`/`delete`.
   - CMake only. Targets are macOS and Linux. Code must build and pass
     on both; no macOS-only or Linux-only API without an abstraction layer.
-  - Build with ASan and UBSan during development.
+  - Build with ASan and UBSan during development, through the `ENABLE_SANITIZERS`
+    CMake option (default `ON`; see `cpp-skill`).
   - Use `cpp-skill`.
-- **Perl** — Perl 5, system Perl (`/usr/bin/perl`). Core modules only — ask before
+- **Perl** — Perl 5, `#!/usr/bin/env perl`. Core modules only — ask before
   adding a CPAN dependency. Use `perl-skill` for Perl work.
 - **Bash** — `#!/usr/bin/env bash` with `set -euo pipefail`. Use `bash-skill`.
 - **AppleScript** — macOS automation only. Use `applescript-skill`.
@@ -52,11 +54,12 @@ Applies to every project unless a project-level CLAUDE.md overrides it.
   `gtest_discover_tests()` so CTest drives them.
 
   ```sh
-  cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug \
-        -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer -g"
+  cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
   cmake --build build
   ctest --test-dir build --output-on-failure
   ```
+  - Format: `uncrustify --no-backup <files>`. Honor the project's `uncrustify.cfg`
+    if present (`-c uncrustify.cfg`).
 - Perl: **Test::More** (core). Tests live in `t/*.t`.
   - Run: `prove -lr t/`
   - Format: `perltidy -b -bext='/'`. Honor the project's `.perltidyrc` if present.

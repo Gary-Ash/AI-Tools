@@ -7,45 +7,45 @@ guidelines, a set of development skills, and a status line script.
 
 ## Contents
 
-| Path            | What it is                                                            |
-| --------------- | --------------------------------------------------------------------- |
-| `CLAUDE.md`     | Global guidelines applied to every project                            |
-| `skills/`       | Claude Code skills for languages, testing, headers, and commits       |
-| `statusline.pl` | Status line showing model, context, rate-limit usage, and cost        |
+| Path            | What it is                                                      |
+| --------------- | --------------------------------------------------------------- |
+| `CLAUDE.md`     | Global guidelines applied to every project                      |
+| `skills/`       | Claude Code skills for languages, testing, headers, and commits |
+| `statusline.pl` | Status line showing model, context, rate-limit usage, and cost  |
 
 ## Skills
 
-| Skill               | Purpose                                                                          |
-| ------------------- | -------------------------------------------------------------------------------- |
+| Skill               | Purpose                                                                            |
+| ------------------- | ---------------------------------------------------------------------------------- |
 | `applescript-skill` | Create, compile, run, and debug AppleScript, including System Events GUI scripting |
-| `bash-skill`        | Create, run, and debug Bash scripts                                              |
-| `cpp-skill`         | Modern, memory-safe, cross-platform C++ with CMake                               |
-| `file-header-skill` | Add or update language-appropriate file header comments                          |
-| `git-commit-skill`  | Generate commit messages that follow project conventions                         |
-| `perl-skill`        | Create, run, debug, and test Perl 5 scripts and modules                          |
-| `python3-skill`     | Create, run, debug, and test Python 3 scripts and packages                       |
-| `tdd-skill`         | Kent Beck–style red → green → refactor test-driven development                   |
+| `bash-skill`        | Create, run, and debug Bash scripts                                                |
+| `cpp-skill`         | Modern, memory-safe, cross-platform C++ with CMake                                 |
+| `file-header-skill` | Add or update language-appropriate file header comments                            |
+| `git-commit-skill`  | Generate commit messages that follow project conventions                           |
+| `perl-skill`        | Create, run, debug, and test Perl 5 scripts and modules                            |
+| `python3-skill`     | Create, run, debug, and test Python 3 scripts and packages                         |
+| `tdd-skill`         | Kent Beck–style red → green → refactor test-driven development                     |
 
 ## Required Utilities
 
 The skills call these command-line tools. Tools marked optional are used only when they
 are installed.
 
-| Skill               | Required                             | Optional                                                   |
-| ------------------- | ------------------------------------ | ---------------------------------------------------------- |
-| `applescript-skill` | `osascript`, `osacompile` (macOS)    |                                                            |
-| `bash-skill`        | `bash`, `shellcheck`, `bats-core`    | `bashdb`                                                   |
-| `cpp-skill`         | C++20 compiler, `cmake`, `ctest`     | `clang-tidy`, `cppcheck`, `lldb`, `gdb`, `valgrind`        |
-| `file-header-skill` | none                                 |                                                            |
-| `git-commit-skill`  | `git`                                |                                                            |
-| `perl-skill`        | `perl`, `prove`, `perltidy`          | `perlcritic`                                               |
-| `python3-skill`     | `python3` (3.10+), `pytest`, `ruff`, `mypy` | `flake8`                                            |
-| `tdd-skill`         | the test runner for your language    |                                                            |
+| Skill               | Required                                       | Optional                              |
+| ------------------- | ---------------------------------------------- | ------------------------------------- |
+| `applescript-skill` | `osascript`, `osacompile` (macOS)              |                                       |
+| `bash-skill`        | `bash`, `shellcheck`, `bats-core`              | `bashdb`                              |
+| `cpp-skill`         | C++23 compiler, `cmake`, `ctest`, `uncrustify` | `cppcheck`, `lldb`, `gdb`, `valgrind` |
+| `file-header-skill` | none                                           |                                       |
+| `git-commit-skill`  | `git`                                          |                                       |
+| `perl-skill`        | `perl`, `prove`, `perltidy`                    | `perlcritic`                          |
+| `python3-skill`     | `python3` (3.10+), `pytest`, `ruff`, `mypy`    |                                       |
+| `tdd-skill`         | the test runner for your language              |                                       |
 
 On macOS, install the tools with Homebrew and CPAN:
 
 ```sh
-brew install shellcheck bats-core bashdb cmake cppcheck llvm perltidy pytest ruff mypy flake8
+brew install swiftformat shellcheck bats-core bashdb cmake uncrustify cppcheck perltidy pytest ruff mypy
 cpan Perl::Critic
 ```
 
@@ -60,23 +60,26 @@ cpan Perl::Critic
 - Session cost in USD
 
 Bars are green below 60%, yellow below 85%, and red at 85% and above. It uses only core
-Perl modules (`JSON::PP`, `POSIX`).
+Perl modules (`JSON::PP`, `POSIX`, `Scalar::Util`).
 
 ## Installation
 
 ```sh
 mkdir -p ~/.claude/skills
-cp CLAUDE.md ~/.claude/CLAUDE.md
-cp -R skills/* ~/.claude/skills/
-cp statusline.pl ~/.claude/statusline.pl
+cp -i CLAUDE.md ~/.claude/CLAUDE.md
+cp -R -i skills/* ~/.claude/skills/
+cp -i statusline.pl ~/.claude/statusline.pl
 ```
+
+`-i` asks before overwriting an existing file, so a CLAUDE.md, skill, or status line
+you have already customized is not replaced silently.
 
 Then enable the status line in `~/.claude/settings.json`:
 
 ```json
 "statusLine": {
   "type": "command",
-  "command": "/usr/bin/perl ~/.claude/statusline.pl"
+  "command": "/usr/bin/env perl ~/.claude/statusline.pl"
 }
 ```
 

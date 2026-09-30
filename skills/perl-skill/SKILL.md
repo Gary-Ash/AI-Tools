@@ -11,18 +11,17 @@ Assist with all aspects of Perl 5 development including creating files, writing 
 
 ## Creating New Files
 
-When creating a new Perl file, add the header using `file-header-skill` with its Perl template (shebang and pragmas for `.pl`; no shebang for `.pm` and `.t`).
+When creating a new Perl file, add the header using `file-header-skill` with its Perl template (shebang and pragmas for `.pl`; pragmas but no shebang for `.pm` and `.t`).
 
 - Make scripts executable: `chmod +x <script.pl>`
 - Modules end with `1;` and put POD documentation after `__END__`
 
 ## Environment
 
-- Global Perl tool config lives under `~/.config/<tool>/`, never as a dotfile in `~`. Point the tool at it with an environment variable in `~/.config/zsh/.zshenv` only if the tool still checks a project-local file first; otherwise pass the path on the command line
-
-- Target the system Perl (`/usr/bin/perl`, 5.34) unless the project specifies otherwise
+- Target Perl 5.34, invoked as `#!/usr/bin/env perl`, unless the project specifies otherwise
 - Core modules only. Ask before adding a CPAN dependency
 - `cpanm` is not installed. If a CPAN module is approved, ask how the user wants it installed
+- Global Perl tool config lives under `~/.config/<tool>/`, never as a dotfile in `~`. Point the tool at it with an environment variable in `~/.config/zsh/.zshenv` only if the tool still checks a project-local file first; otherwise pass the path on the command line
 
 ## Running and Testing
 
@@ -35,18 +34,20 @@ When creating a new Perl file, add the header using `file-header-skill` with its
   - Recursive: `prove -lr t/`
 - Test file structure:
   ```perl
+  use v5.34;
   use strict;
   use warnings;
+  use utf8;
   use Test::More;
 
   use_ok('My::Module');
 
-  is( add( 1, 2 ), 3, 'add sums two numbers' );
-  is_deeply( parse('a=1'), { a => 1 }, 'parse returns a hash' );
-  like( $output, qr/done/, 'output mentions completion' );
+  is(add(1, 2), 3, 'add sums two numbers');
+  is_deeply(parse('a=1'), { a => 1 }, 'parse returns a hash');
+  like(report(), qr/done/, 'report mentions completion');
 
-  eval { divide( 1, 0 ) };
-  like( $@, qr/division by zero/, 'divide dies on zero' );
+  my $error = eval { divide(1, 0); 1 } ? '' : $@;
+  like($error, qr/division by zero/, 'divide dies on zero');
 
   done_testing();
   ```
@@ -59,7 +60,8 @@ When creating a new Perl file, add the header using `file-header-skill` with its
   -i=4      indent 4 spaces
   -ci=4     continuation indent 4
   -nt       spaces, no tabs
-  -ce       cuddled else: "} else {"
+  -nce      uncuddled else: "}" and "else {" on separate lines
+  -pt=2     tight parentheses: "foo($x)", no inner spaces
   -utf8     source is UTF-8
   ```
 - Write code to match these settings so perltidy produces minimal diffs
@@ -91,19 +93,19 @@ When creating a new Perl file, add the header using `file-header-skill` with its
 ### Argument parsing (Getopt::Long, core):
 ```perl
 use Getopt::Long qw(GetOptions);
-use Pod::Usage qw(pod2usage);
+use Pod::Usage   qw(pod2usage);
 
-my %opt = ( verbose => 0 );
-GetOptions( \%opt, 'help|h', 'verbose|v', 'output|o=s' ) or pod2usage(2);
+my %opt = (verbose => 0);
+GetOptions(\%opt, 'help|h', 'verbose|v', 'output|o=s') or pod2usage(2);
 pod2usage(1) if $opt{help};
 ```
 
 ### Paths and files (File::Spec, File::Basename, File::Temp — all core):
 ```perl
 use File::Basename qw(basename dirname);
-use File::Temp qw(tempfile);
+use File::Temp     qw(tempfile);
 
-my ( $tmp_fh, $tmp_path ) = tempfile( UNLINK => 1 );
+my ($tmp_fh, $tmp_path) = tempfile(UNLINK => 1);
 ```
 
 ## Debugging

@@ -26,7 +26,7 @@ After creating a file, make it executable: `chmod +x <script.sh>`
 - Check syntax without executing: `bash -n <script.sh>`
 - Run with debug tracing: `bash -x <script.sh>`
 - Use `shellcheck <script.sh>` for static analysis (if available)
-- For test frameworks, use `bats` if available in the project
+- Tests use `bats` (bats-core, required) in `test/*.bats`; run with `bats test/`
 
 ## Code Quality
 

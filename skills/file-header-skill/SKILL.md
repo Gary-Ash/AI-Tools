@@ -22,14 +22,14 @@ Every header must include these fields in order:
 
 ## Timestamp Format
 
-All timestamps use the format: `DD-MMM-YYYY  H:MMxm`
+All timestamps use the format: `DD-MMM-YYYY HH:MMxm`
 
 Examples: ` 7-Feb-2026  4:22pm`, `19-Mar-2026 11:05am`
 
-- Single-digit days are right-aligned with a leading space
+- Day and hour are two characters wide; a single digit is right-aligned with a leading space
 - Month is three-letter abbreviation with first letter capitalized
 - Time uses 12-hour format with `am`/`pm` (no space before am/pm)
-- Two spaces between the date and time portions
+- One space separates the date and time; a single-digit hour's leading space makes it look like two
 
 ## Comment Syntax Selection
 
@@ -54,10 +54,10 @@ Template:
 ```
 
 Rules:
-- Opening line: `/*` followed by asterisks to fill 89 characters total
+- Opening line: `/*` followed by 88 asterisks (90 characters total)
 - Each interior line starts with ` * ` (space-asterisk-space)
-- Closing line: space followed by asterisks to fill 88 characters, then `/`
-- The asterisk border lines are exactly 89 characters wide
+- Closing line: a space, 88 asterisks, then `/` (90 characters total)
+- The asterisk border lines are exactly 90 characters wide
 
 ### AppleScript block comment style (`(* *)`)
 
@@ -85,14 +85,14 @@ Template:
 ```
 
 Rules:
-- Opening line: `(*` followed by asterisks to fill 89 characters total
+- Opening line: `(*` followed by 88 asterisks (90 characters total)
 - Each interior line starts with ` * ` (space-asterisk-space)
-- Closing line: space followed by asterisks to fill 88 characters, then `)`
-- The asterisk border lines are exactly 89 characters wide
+- Closing line: a space, 88 asterisks, then `)` (90 characters total)
+- The asterisk border lines are exactly 90 characters wide
 
 ### Single-line comment style (`//`)
 
-Use for languages with `//` comments that do not have multiline delimiters or where `//` is conventional:
+Use for languages where `//` is the conventional comment style:
 - Rust, Zig, Go
 
 Template:
@@ -104,7 +104,7 @@ Template:
 //
 // Author   :  Gary Ash <gary.ash@icloud.com>
 // Created  :   7-Feb-2026  4:27pm
-// Modified :  27-Feb-2026  4:59pm
+// Modified :
 //
 // Copyright © 2026 By Gary Ash All rights reserved.
 //****************************************************************************************
@@ -112,8 +112,8 @@ Template:
 
 ### Hash comment style (`#`)
 
-Use for scripting languages:
-- Python, Ruby, Perl, Bash, Shell
+Use for scripting languages and other `#`-comment files:
+- Python, Ruby, Perl, Bash, Shell, Bats, CMake
 
 **Python** includes shebang and encoding lines before the header:
 ```
@@ -149,13 +149,14 @@ Use for scripting languages:
 #*****************************************************************************************
 ```
 
-**Perl** scripts (`.pl`) include shebang and pragmas; modules (`.pm`) and tests (`.t`) omit the shebang:
+**Perl** scripts (`.pl`) include shebang and pragmas; modules (`.pm`) and tests (`.t`) omit the shebang line but keep the pragmas:
 ```
 #!/usr/bin/env perl
 use v5.34;
 use strict;
 use warnings;
 use utf8;
+
 #*****************************************************************************************
 # filename.pl
 #
@@ -180,6 +181,39 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   3-Feb-2026  8:19pm
+# Modified :
+#
+# Copyright © 2026 By Gary Ash All rights reserved.
+#*****************************************************************************************
+```
+
+**Bats** test files (`.bats`) use the Bats shebang and no strict-mode line (Bats manages
+errors itself):
+```
+#!/usr/bin/env bats
+#*****************************************************************************************
+# filename.bats
+#
+# brief summary of the file contents
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  30-Sep-2026  4:10pm
+# Modified :
+#
+# Copyright © 2026 By Gary Ash All rights reserved.
+#*****************************************************************************************
+```
+
+**CMake** (`CMakeLists.txt`, `.cmake`) has no shebang or pragma lines; the header is the
+first line of the file:
+```
+#*****************************************************************************************
+# CMakeLists.txt
+#
+# brief summary of the file contents
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  30-Sep-2026  4:10pm
 # Modified :
 #
 # Copyright © 2026 By Gary Ash All rights reserved.

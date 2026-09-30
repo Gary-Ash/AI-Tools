@@ -21,8 +21,9 @@ Detailed description of the change, written in prose and wrapped at
 
 ## Tags
 
-- `[BUG FIX]` = A bug fix
-- `[FEATURE]` = New feature code
+- `[BUG FIX]` = A bug fix, including a fix to a misconfigured setting or document
+- `[FEATURE]` = New feature code, including a new or updated configuration,
+  document, or dependency version
 - `[REFACTOR]` = A code refactor
 - `[TEST CODE]` = Added test code
 - `[TIDY]` = A tidy up action such as reformatting or spelling fixes
@@ -59,7 +60,7 @@ No tag, no body.
 2. Run `git diff --cached` to see staged changes; if nothing is staged, run `git diff` to see unstaged changes
 3. Check `git log --oneline -1` to determine if this is the first commit (if it errors, it is the first commit)
 4. Analyze the changes to determine the appropriate tag and write a clear summary and description
-5. Check for a README file at the repo root (`README.markdown` (preferred), `README.md`, `README`, `README.rst`, `README.txt`), matching the name case-insensitively so `Readme.md` counts. If one exists, read it and determine whether the changes make any part of it stale or incomplete (features added/removed, usage changed, install steps, options, file layout, etc.). If so, update the README in the same commit. If the README is unaffected, proceed without changes.
+5. Check for a README file at the repo root (`README.markdown` (preferred), `README.md`, `README`, `README.rst`, `README.txt`), matching the name case-insensitively so `Readme.md` counts. If one exists, read it and determine whether the changes make any part of it stale or incomplete (features added/removed, usage changed, install steps, options, file layout, etc.). If so, tell the user which part is stale and ask whether to update it in this commit. If the README is unaffected, proceed without changes.
 6. Stage files if needed (prefer staging specific files over `git add -A`)
 7. Write the message to `.git/COMMIT_EDITMSG` using a quoted HEREDOC:
    ```
