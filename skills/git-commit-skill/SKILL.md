@@ -80,12 +80,18 @@ No tag, no body.
 
 ## Approval Step
 
-Print the full proposed message in the response, then call `AskUserQuestion`
-with one question, header `Commit msg`, and these options:
+Call `AskUserQuestion` with one question, header `Commit msg`, and these
+options:
 
 - **Approve** — commit with the message as written
 - **Edit** — open the message in the editor and commit what comes back
 - **Cancel** — make no commit
+
+The question prompt covers any text printed before it, so the message must
+travel inside the prompt itself: set each option's `preview` field to the full
+proposed message, verbatim, so it is on screen whichever option is focused.
+Do not ask any other question in the same `AskUserQuestion` call; the README
+question from step 5 goes in its own earlier call.
 
 ### On Approve
 
